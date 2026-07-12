@@ -175,17 +175,17 @@
     <div class="studio-container">
         <div class="studio-header">
             <h1>Creator Studio</h1>
-            <p>Publish local 15-minute high-definition reels</p>
+            <p>Publish local high-definition reels</p>
         </div>
 
         <div id="successBanner" class="success-banner">
-            <i class="fa-solid fa-circle-check"></i> Reel Published Successfully! Refresh your StoryTV app to view.
+            <i class="fa-solid fa-circle-check"></i> Reel Published! Open the StoryTV App to watch and track likes.
         </div>
 
         <form id="uploadForm" onsubmit="handlePublish(event)">
             <div class="form-group">
                 <label>Creator Handle</label>
-                <input type="text" id="username" placeholder="e.g., neon_architect" required>
+                <input type="text" id="username" placeholder="e.g., biraj_codes" required>
             </div>
 
             <div class="form-group">
@@ -194,7 +194,7 @@
                     <i class="fa-solid fa-video"></i>
                     <p style="font-size: 0.85rem;">Browse Device Videos</p>
                     <input type="file" id="videoFile" accept="video/*" required onchange="updateHint(this, 'videoHint')">
-                    <div id="videoHint" class="file-name-hint">MP4, MOV supported (Up to 15 Mins)</div>
+                    <div id="videoHint" class="file-name-hint">MP4 or MOV supported</div>
                 </div>
             </div>
 
@@ -204,13 +204,13 @@
                     <i class="fa-solid fa-image"></i>
                     <p style="font-size: 0.85rem;">Browse Photos</p>
                     <input type="file" id="thumbFile" accept="image/*" required onchange="updateHint(this, 'thumbHint')">
-                    <div id="thumbHint" class="file-name-hint">JPEG, PNG vertical crop layout</div>
+                    <div id="thumbHint" class="file-name-hint">JPEG or PNG format</div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Show Caption & Tags</label>
-                <textarea id="caption" rows="3" placeholder="Describe your 15-minute breakdown... #neon #creative" required></textarea>
+                <textarea id="caption" rows="3" placeholder="Describe your reel... #coding #creativity" required></textarea>
             </div>
 
             <button type="submit" class="btn-publish">Publish to StoryTV</button>
@@ -234,37 +234,32 @@
             const username = document.getElementById('username').value;
             const caption = document.getElementById('caption').value;
 
-            // Generate localized address mappings directly pointing to browser hardware storage slots
             const videoObjectURL = URL.createObjectURL(videoFile);
             
-            // Convert the image file to a Base64 string so it stores cleanly inside storage variables
             const reader = new FileReader();
             reader.onloadend = function () {
                 const thumbBase64 = reader.result;
 
-                // Build modern content model node dictionary
                 const newReel = {
-                    id: Date.now(), // Unique Timestamp Signature
+                    id: 'reel_' + Date.now(), 
                     videoSrc: videoObjectURL,
                     username: username,
-                    avatarSrc: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80', // Default modern icon
+                    avatarSrc: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80',
                     description: caption,
-                    initialLikes: '0',
+                    likesCount: 0,
                     coverImg: thumbBase64,
                     isUserUploaded: true
                 };
 
-                // Pull preexisting network cache collections, append our item, then rewrite back to database pipeline
                 let currentUploadedFeed = JSON.parse(localStorage.getItem('user_reels')) || [];
                 currentUploadedFeed.unshift(newReel);
                 localStorage.setItem('user_reels', JSON.stringify(currentUploadedFeed));
 
-                // Show success signal reset dashboard panel UI properties
                 document.getElementById('successBanner').style.display = 'block';
                 document.getElementById('uploadForm').reset();
-                document.getElementById('videoHint').innerText = "MP4, MOV supported (Up to 15 Mins)";
+                document.getElementById('videoHint').innerText = "MP4 or MOV supported";
                 document.getElementById('videoHint').style.color = '#6c6c8c';
-                document.getElementById('thumbHint').innerText = "JPEG, PNG vertical crop layout";
+                document.getElementById('thumbHint').innerText = "JPEG or PNG format";
                 document.getElementById('thumbHint').style.color = '#6c6c8c';
                 
                 setTimeout(() => {
