@@ -3,274 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StoryTV // Creator Studio</title>
+    <title>StoryTV // Studio Manager</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         :root {
             --bg-color: #06060c;
-            --panel-bg: rgba(20, 20, 35, 0.6);
+            --panel-bg: rgba(15, 15, 25, 0.75);
             --neon-cyan: #00f2fe;
             --neon-magenta: #fe019a;
+            --neon-amber: #ffaa00;
             --text-main: #ffffff;
-            --border-glow: rgba(0, 242, 254, 0.2);
+            --text-muted: #8a8ab0;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: radial-gradient(circle at 50% 30%, rgba(254, 1, 154, 0.06) 0%, transparent 60%);
-            padding: 20px;
-        }
-
-        .studio-container {
-            width: 100%;
-            max-width: 480px;
-            background: var(--panel-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 30px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px rgba(254, 1, 154, 0.05);
-        }
-
-        .studio-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .studio-header h1 {
-            font-weight: 800;
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 15px rgba(254, 1, 154, 0.3);
-        }
-
-        .studio-header p {
-            color: #8a8ab0;
-            font-size: 0.85rem;
-            margin-top: 5px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #a0a0ba;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .file-upload-wrapper {
-            position: relative;
-            border: 2px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(0,0,0,0.2);
-        }
-
-        .file-upload-wrapper:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 12px var(--border-glow);
-        }
-
-        .file-upload-wrapper i {
-            font-size: 1.8rem;
-            color: var(--neon-cyan);
-            margin-bottom: 8px;
-        }
-
-        .file-upload-wrapper input[type="file"] {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-name-hint {
-            font-size: 0.75rem;
-            color: #6c6c8c;
-            margin-top: 4px;
-            white-space: nowrap;
+            height: 100vh;
             overflow: hidden;
-            text-overflow: ellipsis;
+            background: radial-gradient(circle at 50% 10%, rgba(254, 1, 154, 0.04) 0%, transparent 50%);
         }
-
-        input[type="text"], textarea {
+        .app-window {
             width: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 12px 16px;
-            color: #fff;
-            font-size: 0.9rem;
-            outline: none;
-            transition: border-color 0.3s;
+            max-width: 420px;
+            height: 92vh;
+            max-height: 850px;
+            background: var(--panel-bg);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(25px);
+            display: flex;
+            flex-direction: column;
         }
-
-        input[type="text"]:focus, textarea:focus {
-            border-color: var(--neon-magenta);
-            box-shadow: 0 0 10px rgba(254, 1, 154, 0.2);
+        header { padding: 24px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 1.3rem; letter-spacing: 1.5px; background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .content-area { flex-grow: 1; padding: 15px 20px; overflow-y: auto; padding-bottom: 80px; }
+        .content-area::-webkit-scrollbar { display: none; }
+        
+        .channel-lockout {
+            text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 20px; margin-top: 20px;
         }
+        
+        /* Directory Layout Styling */
+        .movie-folder { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 14px; margin-bottom: 15px; }
+        .folder-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
+        .folder-title { font-weight: 600; font-size: 0.9rem; color: var(--neon-cyan); display: flex; align-items: center; gap: 8px; }
+        .file-item { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 10px; font-size: 0.8rem; margin-top: 6px; border: 1px solid rgba(255,255,255,0.02); }
+        .btn-delete { background: none; border: none; color: #ff4a4a; cursor: pointer; padding: 4px; font-size: 0.85rem; }
+        
+        /* Modal & UI Elements */
+        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; display: none; padding: 25px; overflow-y: auto; flex-direction: column; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-card { background: #0c0c16; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 24px; }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+        input[type="text"], textarea, select { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.85rem; outline: none; }
+        .file-box { position: relative; border: 1px dashed rgba(255,255,255,0.2); border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; background: rgba(0,0,0,0.2); font-size: 0.75rem; color: var(--text-muted); }
+        .file-box input[type="file"] { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+        .btn-action-submit { width: 100%; background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan)); border: none; border-radius: 10px; padding: 12px; color: white; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
+        .modal-close { float: right; background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; margin-top: -5px; }
 
-        .btn-publish {
-            width: 100%;
-            background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan));
-            border: none;
-            border-radius: 12px;
-            padding: 14px;
-            color: white;
-            font-weight: 700;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(254, 1, 154, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+        /* Footer Menu Structuring */
+        .bottom-nav-bar {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 68px;
+            background: rgba(10, 10, 20, 0.95); border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex; justify-content: space-between; align-items: center; padding: 0 30px; z-index: 10;
         }
-
-        .btn-publish:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
-        }
-
-        .success-banner {
-            display: none;
-            background: rgba(0, 242, 254, 0.1);
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .nav-anchor { color: var(--text-muted); font-size: 1.2rem; cursor: pointer; background: none; border: none; outline: none; transition: color 0.3s; }
+        .nav-anchor:hover { color: var(--neon-cyan); }
+        .nav-center-plus { width: 48px; height: 48px; background: linear-gradient(45deg, var(--neon-magenta), var(--neon-cyan)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; border: none; cursor: pointer; box-shadow: 0 0 15px rgba(0, 242, 254, 0.4); }
     </style>
 </head>
 <body>
 
-    <div class="studio-container">
-        <div class="studio-header">
-            <h1>Creator Studio</h1>
-            <p>Publish local high-definition reels</p>
+    <div class="app-window">
+        <header>
+            <h1 class="logo">Studio Panel</h1>
+            <div id="activeProfileHeader" style="font-size: 0.75rem; display:flex; align-items:center; gap:8px;"></div>
+        </header>
+
+        <main class="content-area" id="studioMainContent">
+            <!-- Handled dynamically by app shell initialization parameters -->
+        </main>
+
+        <!-- Dynamic Control Anchors Bar Layout -->
+        <nav class="bottom-nav-bar">
+            <button class="nav-anchor" onclick="triggerAuth()" title="Login / Register Accounts"><i class="fa-solid fa-user-gear"></i></button>
+            <button class="nav-center-plus" onclick="openPublishWorkflow()" title="Publish Content Elements"><i class="fa-solid fa-plus"></i></button>
+            <button class="nav-anchor" onclick="openSettingsPanel()" title="Channel Architecture Config"><i class="fa-solid fa-sliders"></i></button>
+        </nav>
+
+        <!-- MODAL FLOW CONTAINER: PROFILE BRAND SETTINGS -->
+        <div id="settingsModal" class="modal-overlay">
+            <div class="modal-card">
+                <button class="modal-close" onclick="closeModal('settingsModal')">&times;</button>
+                <h3 style="margin-bottom:15px; font-weight:800; text-transform:uppercase; font-size:0.95rem; color:var(--neon-cyan)">Channel Configuration</h3>
+                <form onsubmit="saveChannelConfig(event)">
+                    <div class="form-group">
+                        <label>Channel Identity Title</label>
+                        <input type="text" id="channelNameField" placeholder="e.g., Quantum Labs Production" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Display Graphic Icon</label>
+                        <div class="file-box">
+                            <i class="fa-solid fa-camera"></i> <span id="avatarHint">Upload From Device Gallery</span>
+                            <input type="file" id="channelAvatarField" accept="image/*" onchange="readImgHint(this, 'avatarHint')">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-action-submit">Apply Configuration</button>
+                </form>
+            </div>
         </div>
 
-        <div id="successBanner" class="success-banner">
-            <i class="fa-solid fa-circle-check"></i> Reel Published! Open the StoryTV App to watch and track likes.
+        <!-- MODAL FLOW CONTAINER: MASTER PUBLISHING PIPELINE -->
+        <div id="publishModal" class="modal-overlay">
+            <div class="modal-card">
+                <button class="modal-close" onclick="closeModal('publishModal')">&times;</button>
+                <h3 style="margin-bottom:15px; font-weight:800; text-transform:uppercase; font-size:0.95rem; color:var(--neon-magenta)">Upload Production File</h3>
+                <form onsubmit="handleItemPublish(event)">
+                    <div class="form-group">
+                        <label>Target Show Allocation (Movie Container)</label>
+                        <select id="videoMovieSelection" onchange="toggleNewMovieInput(this)">
+                            <!-- Populated on open -->
+                        </select>
+                        <input type="text" id="newMovieTitleField" placeholder="Enter new movie folder name..." style="margin-top:8px; display:none;">
+                    </div>
+                    <div class="form-group">
+                        <label>Video File Source</label>
+                        <div class="file-box">
+                            <i class="fa-solid fa-video"></i> <span id="vHint">Select Device Video Asset</span>
+                            <input type="file" id="pubVideoAsset" accept="video/*" required onchange="readImgHint(this, 'vHint')">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Cover Graphic Thumbnail</label>
+                        <div class="file-box">
+                            <i class="fa-solid fa-image"></i> <span id="tHint">Select Device Image Asset</span>
+                            <input type="file" id="pubThumbAsset" accept="image/*" required onchange="readImgHint(this, 'tHint')">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Index Log Caption</label>
+                        <input type="text" id="pubCaptionText" placeholder="Describe the reel sequence metadata..." required>
+                    </div>
+                    <button type="submit" class="btn-action-submit">Broadcast to Network</button>
+                </form>
+            </div>
         </div>
-
-        <form id="uploadForm" onsubmit="handlePublish(event)">
-            <div class="form-group">
-                <label>Creator Handle</label>
-                <input type="text" id="username" placeholder="e.g., biraj_codes" required>
-            </div>
-
-            <div class="form-group">
-                <label>Select Reel Video (From Gallery)</label>
-                <div class="file-upload-wrapper">
-                    <i class="fa-solid fa-video"></i>
-                    <p style="font-size: 0.85rem;">Browse Device Videos</p>
-                    <input type="file" id="videoFile" accept="video/*" required onchange="updateHint(this, 'videoHint')">
-                    <div id="videoHint" class="file-name-hint">MP4 or MOV supported</div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Select Cover Thumbnail (From Gallery)</label>
-                <div class="file-upload-wrapper">
-                    <i class="fa-solid fa-image"></i>
-                    <p style="font-size: 0.85rem;">Browse Photos</p>
-                    <input type="file" id="thumbFile" accept="image/*" required onchange="updateHint(this, 'thumbHint')">
-                    <div id="thumbHint" class="file-name-hint">JPEG or PNG format</div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Show Caption & Tags</label>
-                <textarea id="caption" rows="3" placeholder="Describe your reel... #coding #creativity" required></textarea>
-            </div>
-
-            <button type="submit" class="btn-publish">Publish to StoryTV</button>
-        </form>
     </div>
 
     <script>
-        function updateHint(input, hintId) {
-            const hint = document.getElementById(hintId);
-            if(input.files && input.files[0]) {
-                hint.innerText = `Selected: ${input.files[0].name}`;
-                hint.style.color = 'var(--neon-cyan)';
+        let currentProfileConfig = null;
+
+        window.onload = function() {
+            loadChannelContext();
+            renderDashboardStructure();
+        };
+
+        function loadChannelContext() {
+            currentProfileConfig = JSON.parse(localStorage.getItem('studio_active_channel'));
+            const header = document.getElementById('activeProfileHeader');
+            if (currentProfileConfig) {
+                header.innerHTML = `<img src="${currentProfileConfig.avatar}" style="width:24px; height:24px; border-radius:50%; object-fit:cover; border:1px solid var(--neon-cyan)"> <strong>${currentProfileConfig.name}</strong>`;
+            } else {
+                header.innerHTML = `<span style="color:var(--neon-amber)"><i class="fa-solid fa-triangle-exclamation"></i> Lockout Active</span>`;
             }
         }
 
-        function handlePublish(e) {
-            e.preventDefault();
+        function renderDashboardStructure() {
+            const container = document.getElementById('studioMainContent');
+            if(!currentProfileConfig) {
+                container.innerHTML = `
+                    <div class="channel-lockout">
+                        <i class="fa-solid fa-building-shield" style="font-size:2rem; color:var(--neon-amber); margin-bottom:12px;"></i>
+                        <h4 style="margin-bottom:6px;">Broadcast Stream Locked</h4>
+                        <p style="font-size:0.75rem; color:var(--text-muted); line-height:1.4;">Before uploading any dynamic media files, you must configure your channel profile using the settings panel below.</p>
+                    </div>
+                `;
+                return;
+            }
 
-            const videoFile = document.getElementById('videoFile').files[0];
-            const thumbFile = document.getElementById('thumbFile').files[0];
-            const username = document.getElementById('username').value;
-            const caption = document.getElementById('caption').value;
+            const database = JSON.parse(localStorage.getItem('storytv_movies_db')) || {};
+            const foldersArray = Object.keys(database);
 
-            const videoObjectURL = URL.createObjectURL(videoFile);
+            if(foldersArray.length === 0) {
+                container.innerHTML = `
+                    <div class="channel-lockout" style="border-color:rgba(255,255,255,0.05)">
+                        <i class="fa-solid fa-folder-plus" style="font-size:1.8rem; color:var(--text-muted); margin-bottom:12px;"></i>
+                        <p style="font-size:0.75rem; color:var(--text-muted);">No movies or video instances have been structured yet. Tap the '+' layout to begin.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `<h3 style="font-size:0.8rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:15px;">Active Show Directories</h3>`;
             
-            const reader = new FileReader();
-            reader.onloadend = function () {
-                const thumbBase64 = reader.result;
-
-                const newReel = {
-                    id: 'reel_' + Date.now(), 
-                    videoSrc: videoObjectURL,
-                    username: username,
-                    avatarSrc: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80',
-                    description: caption,
-                    likesCount: 0,
-                    coverImg: thumbBase64,
-                    isUserUploaded: true
-                };
-
-                let currentUploadedFeed = JSON.parse(localStorage.getItem('user_reels')) || [];
-                currentUploadedFeed.unshift(newReel);
-                localStorage.setItem('user_reels', JSON.stringify(currentUploadedFeed));
-
-                document.getElementById('successBanner').style.display = 'block';
-                document.getElementById('uploadForm').reset();
-                document.getElementById('videoHint').innerText = "MP4 or MOV supported";
-                document.getElementById('videoHint').style.color = '#6c6c8c';
-                document.getElementById('thumbHint').innerText = "JPEG or PNG format";
-                document.getElementById('thumbHint').style.color = '#6c6c8c';
+            foldersArray.forEach(movieKey => {
+                const folderNode = document.createElement('div');
+                folderNode.className = 'movie-folder';
                 
-                setTimeout(() => {
-                    document.getElementById('successBanner').style.display = 'none';
-                }, 5000);
+                let fileListHTML = '';
+                database[movieKey].forEach(video => {
+                    fileListHTML += `
+                        <div class="file-item">
+                            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px;"><i class="fa-solid fa-file-video" style="color:#888; margin-right:6px;"></i>${video.description}</span>
+                            <button class="btn-delete" onclick="deleteVideoAsset('${movieKey}', '${video.id}')" title="Wipe item data"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    `;
+                });
+
+                folderNode.innerHTML = `
+                    <div class="folder-header">
+                        <span class="folder-title"><i class="fa-solid fa-folder-open"></i> ${movieKey}</span>
+                        <span style="font-size:0.7rem; color:var(--text-muted)">${database[movieKey].length} nodes</span>
+                    </div>
+                    ${fileListHTML || '<div style="font-size:0.7rem; color:#555; padding:4px;">Folder clear.</div>'}
+                `;
+                container.appendChild(folderNode);
+            });
+        }
+
+        function openSettingsPanel() {
+            if(currentProfileConfig) {
+                document.getElementById('channelNameField').value = currentProfileConfig.name;
+            }
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function saveChannelConfig(e) {
+            e.preventDefault();
+            const name = document.getElementById('channelNameField').value;
+            const fileInput = document.getElementById('channelAvatarField').files[0];
+
+            const completeSave = (avatarData) => {
+                currentProfileConfig = { name, avatar: avatarData || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80' };
+                localStorage.setItem('studio_active_channel', JSON.stringify(currentProfileConfig));
+                
+                // Write global signature map for user UI lookups
+                localStorage.setItem('db_generation_signature', Date.now());
+                
+                closeModal('settingsModal');
+                loadChannelContext();
+                renderDashboardStructure();
             };
 
-            if (thumbFile) {
-                reader.readAsDataURL(thumbFile);
+            if(fileInput) {
+                const reader = new FileReader();
+                reader.onloadend = () => completeSave(reader.result);
+                reader.readAsDataURL(fileInput);
+            } else {
+                completeSave(currentProfileConfig ? currentProfileConfig.avatar : null);
             }
         }
+
+        function openPublishWorkflow() {
+            if(!currentProfileConfig) {
+                alert("Action Blocked: Setup identity profile within parameters first.");
+                return;
+            }
+            const select = document.getElementById('videoMovieSelection');
+            const database = JSON.parse(localStorage.getItem('storytv_movies_db')) || {};
+            
+            select.innerHTML = '<option value="">-- Create New Movie Category --</option>';
+            Object.keys(database).forEach(movieKey => {
+                select.innerHTML += `<option value="${movieKey}">${movieKey}</option>`;
+            });
+            
+            toggleNewMovieInput(select);
+            document.getElementById('publishModal').classList.add('active');
+        }
+
+        function toggleNewMovieInput(selectElement) {
+            const inputField = document.getElementById('newMovieTitleField');
+            if(selectElement.value === "") {
+                inputField.style.display = "block";
+                inputField.required = true;
+            } else {
+                inputField.style.display = "none";
+                inputField.required = false;
+            }
+        }
+
+        function handleItemPublish(e) {
+            e.preventDefault();
+            const select = document.getElementById('videoMovieSelection').value;
+            const newMovieTitle = document.getElementById('newMovieTitleField').value.trim();
+            const movieKey = select || newMovieTitle;
+
+            const videoFile = document.getElementById('pubVideoAsset').files[0];
+            const thumbFile = document.getElementById('pubThumbAsset').files[0];
+            const caption = document.getElementById('pubCaptionText').value;
+
+            const videoObjectURL = URL.createObjectURL(videoFile);
+            const reader = new FileReader();
+
+            reader.onloadend = function() {
+                const database = JSON.parse(localStorage.getItem('storytv_movies_db')) || {};
+                if(!database[movieKey]) database[movieKey] = [];
+
+                database[movieKey].unshift({
+                    id: 'video_' + Date.now(),
+                    videoSrc: videoObjectURL,
+                    username: currentProfileConfig.name,
+                    avatarSrc: currentProfileConfig.avatar,
+                    description: caption,
+                    likesCount: 0,
+                    coverImg: reader.result
+                });
+
+                localStorage.setItem('storytv_movies_db', JSON.stringify(database));
+                localStorage.setItem('db_generation_signature', Date.now()); // Increment generation signature instantly
+
+                closeModal('publishModal');
+                document.getElementById('publishModal').querySelector('form').reset();
+                renderDashboardStructure();
+            };
+
+            if(thumbFile) reader.readAsDataURL(thumbFile);
+        }
+
+        function deleteVideoAsset(movieKey, videoId) {
+            if(!confirm("Purge selected item index parameters completely?")) return;
+            const database = JSON.parse(localStorage.getItem('storytv_movies_db')) || {};
+            
+            if(database[movieKey]) {
+                database[movieKey] = database[movieKey].filter(video => video.id !== videoId);
+                if(database[movieKey].length === 0) delete database[movieKey];
+                
+                localStorage.setItem('storytv_movies_db', JSON.stringify(database));
+                localStorage.setItem('db_generation_signature', Date.now()); // Increment update loop configuration data
+                renderDashboardStructure();
+            }
+        }
+
+        function readImgHint(input, elemId) {
+            if(input.files && input.files[0]) {
+                document.getElementById(elemId).innerText = `Selected: ${input.files[0].name.substring(0, 20)}...`;
+                document.getElementById(elemId).style.color = "var(--neon-cyan)";
+            }
+        }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function triggerAuth() { alert("🔒 Authentication Services Gateway: Terminal online."); }
     </script>
 </body>
 </html>
