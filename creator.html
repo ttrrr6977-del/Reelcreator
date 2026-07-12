@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StoryTV // Creator Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #06060c;
+            --panel-bg: rgba(20, 20, 35, 0.6);
+            --neon-cyan: #00f2fe;
+            --neon-magenta: #fe019a;
+            --text-main: #ffffff;
+            --border-glow: rgba(0, 242, 254, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at 50% 30%, rgba(254, 1, 154, 0.06) 0%, transparent 60%);
+            padding: 20px;
+        }
+
+        .studio-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px rgba(254, 1, 154, 0.05);
+        }
+
+        .studio-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .studio-header h1 {
+            font-weight: 800;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(254, 1, 154, 0.3);
+        }
+
+        .studio-header p {
+            color: #8a8ab0;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #a0a0ba;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .file-upload-wrapper:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 12px var(--border-glow);
+        }
+
+        .file-upload-wrapper i {
+            font-size: 1.8rem;
+            color: var(--neon-cyan);
+            margin-bottom: 8px;
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-name-hint {
+            font-size: 0.75rem;
+            color: #6c6c8c;
+            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--neon-magenta);
+            box-shadow: 0 0 10px rgba(254, 1, 154, 0.2);
+        }
+
+        .btn-publish {
+            width: 100%;
+            background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan));
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(254, 1, 154, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-publish:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+        }
+
+        .success-banner {
+            display: none;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="studio-container">
+        <div class="studio-header">
+            <h1>Creator Studio</h1>
+            <p>Publish local 15-minute high-definition reels</p>
+        </div>
+
+        <div id="successBanner" class="success-banner">
+            <i class="fa-solid fa-circle-check"></i> Reel Published Successfully! Refresh your StoryTV app to view.
+        </div>
+
+        <form id="uploadForm" onsubmit="handlePublish(event)">
+            <div class="form-group">
+                <label>Creator Handle</label>
+                <input type="text" id="username" placeholder="e.g., neon_architect" required>
+            </div>
+
+            <div class="form-group">
+                <label>Select Reel Video (From Gallery)</label>
+                <div class="file-upload-wrapper">
+                    <i class="fa-solid fa-video"></i>
+                    <p style="font-size: 0.85rem;">Browse Device Videos</p>
+                    <input type="file" id="videoFile" accept="video/*" required onchange="updateHint(this, 'videoHint')">
+                    <div id="videoHint" class="file-name-hint">MP4, MOV supported (Up to 15 Mins)</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Select Cover Thumbnail (From Gallery)</label>
+                <div class="file-upload-wrapper">
+                    <i class="fa-solid fa-image"></i>
+                    <p style="font-size: 0.85rem;">Browse Photos</p>
+                    <input type="file" id="thumbFile" accept="image/*" required onchange="updateHint(this, 'thumbHint')">
+                    <div id="thumbHint" class="file-name-hint">JPEG, PNG vertical crop layout</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Show Caption & Tags</label>
+                <textarea id="caption" rows="3" placeholder="Describe your 15-minute breakdown... #neon #creative" required></textarea>
+            </div>
+
+            <button type="submit" class="btn-publish">Publish to StoryTV</button>
+        </form>
+    </div>
+
+    <script>
+        function updateHint(input, hintId) {
+            const hint = document.getElementById(hintId);
+            if(input.files && input.files[0]) {
+                hint.innerText = `Selected: ${input.files[0].name}`;
+                hint.style.color = 'var(--neon-cyan)';
+            }
+        }
+
+        function handlePublish(e) {
+            e.preventDefault();
+
+            const videoFile = document.getElementById('videoFile').files[0];
+            const thumbFile = document.getElementById('thumbFile').files[0];
+            const username = document.getElementById('username').value;
+            const caption = document.getElementById('caption').value;
+
+            // Generate localized address mappings directly pointing to browser hardware storage slots
+            const videoObjectURL = URL.createObjectURL(videoFile);
+            
+            // Convert the image file to a Base64 string so it stores cleanly inside storage variables
+            const reader = new FileReader();
+            reader.onloadend = function () {
+                const thumbBase64 = reader.result;
+
+                // Build modern content model node dictionary
+                const newReel = {
+                    id: Date.now(), // Unique Timestamp Signature
+                    videoSrc: videoObjectURL,
+                    username: username,
+                    avatarSrc: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80', // Default modern icon
+                    description: caption,
+                    initialLikes: '0',
+                    coverImg: thumbBase64,
+                    isUserUploaded: true
+                };
+
+                // Pull preexisting network cache collections, append our item, then rewrite back to database pipeline
+                let currentUploadedFeed = JSON.parse(localStorage.getItem('user_reels')) || [];
+                currentUploadedFeed.unshift(newReel);
+                localStorage.setItem('user_reels', JSON.stringify(currentUploadedFeed));
+
+                // Show success signal reset dashboard panel UI properties
+                document.getElementById('successBanner').style.display = 'block';
+                document.getElementById('uploadForm').reset();
+                document.getElementById('videoHint').innerText = "MP4, MOV supported (Up to 15 Mins)";
+                document.getElementById('videoHint').style.color = '#6c6c8c';
+                document.getElementById('thumbHint').innerText = "JPEG, PNG vertical crop layout";
+                document.getElementById('thumbHint').style.color = '#6c6c8c';
+                
+                setTimeout(() => {
+                    document.getElementById('successBanner').style.display = 'none';
+                }, 5000);
+            };
+
+            if (thumbFile) {
+                reader.readAsDataURL(thumbFile);
+            }
+        }
+    </script>
+</body>
+</html>
