@@ -18,172 +18,91 @@
             --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
         
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: 'Inter', sans-serif; 
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            background: radial-gradient(circle at 50% 10%, rgba(254, 1, 154, 0.05) 0%, transparent 60%);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
         .app-window {
-            width: 100%;
-            height: 100%;
-            background: var(--panel-bg);
-            position: relative;
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            display: flex;
-            flex-direction: column;
+            width: 100%; height: 100%; background: var(--panel-bg); position: relative; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); display: flex; flex-direction: column;
         }
 
-        /* Ambient Sync Flash Animation Overlay */
-        .sync-flash-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(0, 242, 254, 0.25) 0%, transparent 70%);
-            border: 3px solid var(--neon-cyan);
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        .sync-flash-overlay.blink {
-            animation: modernBlink 1s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-        }
-        @keyframes modernBlink {
-            0% { opacity: 0; }
-            20% { opacity: 1; }
-            100% { opacity: 0; }
-        }
+        .sync-flash-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 3px solid var(--neon-cyan); z-index: 9999; pointer-events: none; opacity: 0; }
+        .sync-flash-overlay.blink { animation: modernBlink 1s cubic-bezier(0.1, 0.8, 0.3, 1) forwards; }
+        @keyframes modernBlink { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
 
         @media (min-width: 480px) {
-            .app-window {
-                max-width: 420px;
-                height: 92vh;
-                max-height: 850px;
-                border-radius: 36px;
-                border: 1px solid rgba(255, 255, 255, 0.08);
-                box-shadow: 0 25px 50px rgba(0,0,0,0.7);
-            }
+            .app-window { max-width: 420px; height: 92vh; max-height: 850px; border-radius: 36px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 25px 50px rgba(0,0,0,0.7); }
         }
 
-        header { 
-            padding: 20px 20px 12px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
+        header { padding: 20px 20px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
         .logo { font-weight: 800; font-size: 1.3rem; letter-spacing: 1px; background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .content-area { 
-            flex-grow: 1; 
-            padding: 20px; 
-            overflow-y: auto; 
-            padding-bottom: calc(90px + var(--safe-bottom)); 
-        }
+        /* Fixed scrolling height to avoid navigation obstruction */
+        .content-area { flex-grow: 1; padding: 20px; overflow-y: auto; padding-bottom: calc(110px + var(--safe-bottom)); }
         .content-area::-webkit-scrollbar { display: none; }
         
-        .channel-lockout {
-            text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.01); border: 1px dashed rgba(255,255,255,0.08); border-radius: 24px; margin-top: 10px;
-        }
+        .channel-lockout { text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.01); border: 1px dashed rgba(255,255,255,0.08); border-radius: 24px; margin-top: 10px; }
         
-        /* Mobile-First Folders & Files */
         .movie-folder { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 16px; margin-bottom: 16px; }
         .folder-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 10px; }
         .folder-title { font-weight: 600; font-size: 0.95rem; color: var(--neon-cyan); display: flex; align-items: center; gap: 10px; }
         
-        .file-item { 
-            display: flex; align-items: center; justify-content: space-between; 
-            background: rgba(0,0,0,0.25); padding: 12px 14px; border-radius: 14px; 
-            font-size: 0.85rem; margin-top: 8px; border: 1px solid rgba(255,255,255,0.02); 
-        }
-        .btn-delete { background: rgba(255, 74, 74, 0.1); border: none; color: #ff4a4a; cursor: pointer; padding: 8px 12px; border-radius: 10px; font-size: 0.8rem; transition: background 0.2s; }
-        .btn-delete:active { background: rgba(255, 74, 74, 0.25); }
+        .file-item { background: rgba(0,0,0,0.25); padding: 12px; border-radius: 14px; margin-top: 10px; border: 1px solid rgba(255,255,255,0.02); }
+        .file-info { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+        .file-preview-img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; background: #111; }
+        .file-actions { display: flex; gap: 8px; justify-content: flex-end; }
         
-        /* iOS-Style Sliding Bottom Sheets */
-        .modal-overlay { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.6); z-index: 100; display: none; 
-            flex-direction: column; justify-content: flex-end; 
-        }
+        .btn-manage { border: none; padding: 8px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background 0.2s; color: #fff; }
+        .btn-replace { background: rgba(0, 242, 254, 0.15); color: var(--neon-cyan); }
+        .btn-delete { background: rgba(255, 74, 74, 0.15); color: #ff4a4a; }
+        .btn-manage:active { opacity: 0.7; }
+        
+        /* Bottom Sheets */
+        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; display: none; flex-direction: column; justify-content: flex-end; }
         .modal-overlay.active { display: flex; }
-        
-        .modal-sheet { 
-            background: #0e0e18; 
-            border-top: 1px solid rgba(255, 255, 255, 0.12); 
-            border-radius: 28px 28px 0 0; 
-            padding: 24px 24px calc(24px + var(--safe-bottom)); 
-            max-height: 85%;
-            overflow-y: auto;
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.1, 0.8, 0.3, 1);
-        }
+        .modal-sheet { background: #0e0e18; border-top: 1px solid rgba(255, 255, 255, 0.12); border-radius: 28px 28px 0 0; padding: 24px 24px calc(30px + var(--safe-bottom)); max-height: 85%; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.1, 0.8, 0.3, 1); }
         .modal-overlay.active .modal-sheet { transform: translateY(0); }
         .sheet-handle { width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: -12px auto 20px; }
         
         .form-group { margin-bottom: 18px; }
-        label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px; }
-        input[type="text"], textarea, select { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; color: #fff; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
-        input[type="text"]:focus, select:focus { border-color: var(--neon-cyan); }
-        
+        label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+        input[type="text"], select { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; color: #fff; font-size: 0.9rem; outline: none; }
         .file-box { position: relative; border: 1px dashed rgba(255,255,255,0.15); border-radius: 14px; padding: 18px; text-align: center; cursor: pointer; background: rgba(0,0,0,0.2); font-size: 0.8rem; color: var(--text-muted); }
         .file-box input[type="file"] { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; }
-        
-        .btn-action-submit { width: 100%; background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan)); border: none; border-radius: 14px; padding: 16px; color: white; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; margin-top: 10px; }
-        .btn-action-submit:active { opacity: 0.85; }
+        .btn-action-submit { width: 100%; background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan)); border: none; border-radius: 14px; padding: 16px; color: white; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; }
 
-        /* Navigation Bar Optimized for Thumbs */
+        /* Raised Navigation Dock Bar */
         .bottom-nav-bar {
-            position: absolute; bottom: 0; left: 0; width: 100%; 
-            height: calc(72px + var(--safe-bottom));
-            background: rgba(10, 10, 18, 0.94); border-top: 1px solid rgba(255, 255, 255, 0.06);
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 0 40px var(--safe-bottom); z-index: 10;
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: absolute; bottom: calc(12px + var(--safe-bottom)); left: 5%; width: 90%; 
+            height: 68px; background: rgba(15, 15, 27, 0.95); border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px; display: flex; justify-content: space-between; align-items: center; 
+            padding: 0 30px; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(20px);
         }
         .nav-anchor { color: var(--text-muted); font-size: 1.3rem; cursor: pointer; background: none; border: none; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
-        .nav-anchor:active { color: var(--neon-cyan); }
-        .nav-center-plus { width: 54px; height: 54px; background: linear-gradient(45deg, var(--neon-magenta), var(--neon-cyan)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.4rem; border: none; cursor: pointer; box-shadow: 0 0 20px rgba(0, 242, 254, 0.35); transform: translateY(-12px); }
-        .nav-center-plus:active { transform: translateY(-12px) scale(0.92); opacity: 0.9; }
+        .nav-center-plus { width: 56px; height: 56px; background: linear-gradient(45deg, var(--neon-magenta), var(--neon-cyan)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.4rem; border: none; cursor: pointer; transform: translateY(-16px); box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4); }
     </style>
 </head>
 <body>
 
     <div class="app-window">
-        <!-- The Screen Flash System Component -->
         <div id="syncFlash" class="sync-flash-overlay"></div>
-
         <header>
             <h1 class="logo">Studio Panel</h1>
-            <div id="activeProfileHeader" style="font-size: 0.8rem; display:flex; align-items:center; gap:8px;"></div>
+            <div id="activeProfileHeader"></div>
         </header>
 
         <main class="content-area" id="studioMainContent"></main>
 
         <nav class="bottom-nav-bar">
-            <button class="nav-anchor" onclick="triggerAuth()" title="Login / Register"><i class="fa-solid fa-user-gear"></i></button>
+            <button class="nav-anchor" onclick="triggerAuth()"><i class="fa-solid fa-user-gear"></i></button>
             <button class="nav-center-plus" onclick="openPublishWorkflow()"><i class="fa-solid fa-plus"></i></button>
             <button class="nav-anchor" onclick="openSettingsPanel()"><i class="fa-solid fa-sliders"></i></button>
         </nav>
 
-        <!-- SETTINGS SHEET -->
+        <!-- CHANNEL SHEET -->
         <div id="settingsModal" class="modal-overlay" onclick="closeSheetOnOuter(event, 'settingsModal')">
             <div class="modal-sheet">
                 <div class="sheet-handle"></div>
-                <h3 style="margin-bottom:20px; font-weight:700; font-size:1.1rem; color:var(--neon-cyan)">Channel Profile</h3>
+                <h3 style="margin-bottom:20px; font-weight:700; color:var(--neon-cyan)">Channel Profile</h3>
                 <form onsubmit="saveChannelConfig(event)">
                     <div class="form-group">
                         <label>Channel Name</label>
@@ -197,18 +116,19 @@
                             <input type="file" id="channelAvatarField" accept="image/*" onchange="readImgHint(this, 'avatarHint')">
                         </div>
                     </div>
-                    <button type="submit" class="btn-action-submit">Save Channel Settings</button>
+                    <button type="submit" class="btn-action-submit">Save Settings</button>
                 </form>
             </div>
         </div>
 
-        <!-- PUBLISH SHEET -->
+        <!-- UPLOAD / REPLACE SHEET -->
         <div id="publishModal" class="modal-overlay" onclick="closeSheetOnOuter(event, 'publishModal')">
             <div class="modal-sheet">
                 <div class="sheet-handle"></div>
-                <h3 style="margin-bottom:20px; font-weight:700; font-size:1.1rem; color:var(--neon-magenta)">Upload Video</h3>
+                <h3 id="modalWorkflowTitle" style="margin-bottom:20px; font-weight:700; color:var(--neon-magenta)">Upload Video</h3>
                 <form onsubmit="handleItemPublish(event)">
-                    <div class="form-group">
+                    <input type="hidden" id="editVideoTargetId">
+                    <div class="form-group" id="folderGroupField">
                         <label>Select Movie (Folder)</label>
                         <select id="videoMovieSelection" onchange="toggleNewMovieInput(this)"></select>
                         <input type="text" id="newMovieTitleField" placeholder="Name new movie folder..." style="margin-top:10px; display:none;">
@@ -218,7 +138,7 @@
                         <div class="file-box">
                             <i class="fa-solid fa-video" style="margin-bottom:6px; font-size:1.2rem;"></i><br>
                             <span id="vHint">Choose Video Asset</span>
-                            <input type="file" id="pubVideoAsset" accept="video/*" required onchange="readImgHint(this, 'vHint')">
+                            <input type="file" id="pubVideoAsset" accept="video/*" onchange="readImgHint(this, 'vHint')">
                         </div>
                     </div>
                     <div class="form-group">
@@ -226,14 +146,14 @@
                         <div class="file-box">
                             <i class="fa-solid fa-image" style="margin-bottom:6px; font-size:1.2rem;"></i><br>
                             <span id="tHint">Choose Thumbnail Image</span>
-                            <input type="file" id="pubThumbAsset" accept="image/*" required onchange="readImgHint(this, 'tHint')">
+                            <input type="file" id="pubThumbAsset" accept="image/*" onchange="readImgHint(this, 'tHint')">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Video Caption</label>
-                        <input type="text" id="pubCaptionText" placeholder="Write a short description..." required>
+                        <input type="text" id="pubCaptionText" placeholder="Write a description..." required>
                     </div>
-                    <button type="submit" class="btn-action-submit">Publish to App</button>
+                    <button type="submit" class="btn-action-submit" id="submitWorkflowBtn">Publish</button>
                 </form>
             </div>
         </div>
@@ -250,7 +170,7 @@
         function triggerBlinkEffect() {
             const flash = document.getElementById('syncFlash');
             flash.classList.remove('blink');
-            void flash.offsetWidth; // Force element layout recalculation to restart animation
+            void flash.offsetWidth;
             flash.classList.add('blink');
         }
 
@@ -258,9 +178,9 @@
             currentProfileConfig = JSON.parse(localStorage.getItem('studio_active_channel'));
             const header = document.getElementById('activeProfileHeader');
             if (currentProfileConfig) {
-                header.innerHTML = `<img src="${currentProfileConfig.avatar}" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:1px solid var(--neon-cyan)">`;
+                header.innerHTML = `<img src="${currentProfileConfig.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:2px solid var(--neon-cyan)">`;
             } else {
-                header.innerHTML = `<span style="color:var(--neon-amber); font-size:0.75rem;"><i class="fa-solid fa-lock"></i> Setup Profile</span>`;
+                header.innerHTML = `<span style="color:var(--neon-amber); font-size:0.75rem;"><i class="fa-solid fa-lock"></i> Lockout</span>`;
             }
         }
 
@@ -270,27 +190,27 @@
                 container.innerHTML = `
                     <div class="channel-lockout">
                         <i class="fa-solid fa-user-astronaut" style="font-size:2.5rem; color:var(--text-muted); margin-bottom:16px; opacity:0.5;"></i>
-                        <h4 style="margin-bottom:8px;">Channel Required</h4>
-                        <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.5;">Tap the settings icon in the bottom right corner to build your channel before uploading media.</p>
+                        <h4>Create your Channel</h4>
+                        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Tap the right sliders menu to create a channel before publishing.</p>
                     </div>
                 `;
                 return;
             }
 
-            const database = JSON.parse(localStorage.getItem('storytv_movies_db')) || {};
+            const database = JSON.parse(localStorage.getItem('storytv_movies_db_v2')) || {};
             const foldersArray = Object.keys(database);
 
             if(foldersArray.length === 0) {
                 container.innerHTML = `
-                    <div class="channel-lockout" style="border-style: solid;">
-                        <i class="fa-solid fa-clapperboard" style="font-size:2.2rem; color:var(--neon-cyan); margin-bottom:14px; opacity:0.6;"></i>
-                        <p style="font-size:0.8rem; color:var(--text-muted);">Your studio is ready. Tap the middle '+' button to start organizing movies.</p>
+                    <div class="channel-lockout">
+                        <i class="fa-solid fa-clapperboard" style="font-size:2.2rem; color:var(--neon-cyan); margin-bottom:14px;"></i>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">No contents organized. Press '+' to launch your first Movie folder.</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = `<h3 style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px; font-weight:700; letter-spacing:0.5px;">Your Content Folders</h3>`;
+            container.innerHTML = `<h3 style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px; font-weight:700;">Active Movies</h3>`;
             
             foldersArray.forEach(movieKey => {
                 const folderNode = document.createElement('div');
@@ -300,8 +220,14 @@
                 database[movieKey].forEach(video => {
                     fileListHTML += `
                         <div class="file-item">
-                            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px;"><i class="fa-solid fa-video" style="color:var(--text-muted); margin-right:8px;"></i>${video.description}</span>
-                            <button class="btn-delete" onclick="deleteVideoAsset('${movieKey}', '${video.id}')">Delete</button>
+                            <div class="file-info">
+                                <img class="file-preview-img" src="${video.coverImg || ''}">
+                                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px; font-weight:500;">${video.description}</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="btn-manage btn-replace" onclick="openReplaceWorkflow('${movieKey}', '${video.id}')">Replace</button>
+                                <button class="btn-manage btn-delete" onclick="deleteVideoAsset('${movieKey}', '${video.id}')">Delete</button>
+                            </div>
                         </div>
                     `;
                 });
@@ -311,16 +237,14 @@
                         <span class="folder-title"><i class="fa-solid fa-folder"></i> ${movieKey}</span>
                         <span style="font-size:0.75rem; color:var(--text-muted)">${database[movieKey].length} clips</span>
                     </div>
-                    ${fileListHTML || '<div style="font-size:0.75rem; color:#444; padding:4px;">Empty Movie Directory.</div>'}
+                    ${fileListHTML || '<div style="font-size:0.75rem; color:#444;">No tracks mapped.</div>'}
                 `;
                 container.appendChild(folderNode);
             });
         }
 
         function openSettingsPanel() {
-            if(currentProfileConfig) {
-                document.getElementById('channelNameField').value = currentProfileConfig.name;
-            }
+            if(currentProfileConfig) document.getElementById('channelNameField').value = currentProfileConfig.name;
             document.getElementById('settingsModal').classList.add('active');
         }
 
@@ -333,11 +257,10 @@
                 currentProfileConfig = { name, avatar: avatarData || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150' };
                 localStorage.setItem('studio_active_channel', JSON.stringify(currentProfileConfig));
                 localStorage.setItem('db_generation_signature', Date.now());
-                
                 closeModal('settingsModal');
                 loadChannelContext();
                 renderDashboardStructure();
-                triggerBlinkEffect(); // Run modern action sync animation
+                triggerBlinkEffect();
             };
 
             if(fileInput) {
@@ -350,81 +273,111 @@
         }
 
         function openPublishWorkflow() {
-            if(!currentProfileConfig) {
-                alert("Please build your profile in Channel Settings before posting videos!");
-                return;
-            }
-            const select = document.getElementById('videoMovieSelection');
-            const database = JSON.parse(localStorage.getItem('storytv_movies_db')) || {};
+            if(!currentProfileConfig) return alert("Setup your identity profile first!");
+            document.getElementById('modalWorkflowTitle').innerText = "Upload Video";
+            document.getElementById('submitWorkflowBtn').innerText = "Publish";
+            document.getElementById('editVideoTargetId').value = "";
+            document.getElementById('pubVideoAsset').required = true;
+            document.getElementById('pubThumbAsset').required = true;
+            document.getElementById('folderGroupField').style.display = "block";
             
+            const select = document.getElementById('videoMovieSelection');
+            const database = JSON.parse(localStorage.getItem('storytv_movies_db_v2')) || {};
             select.innerHTML = '<option value="">+ Create New Movie Folder</option>';
-            Object.keys(database).forEach(movieKey => {
-                select.innerHTML += `<option value="${movieKey}">${movieKey}</option>`;
-            });
+            Object.keys(database).forEach(movieKey => { select.innerHTML += `<option value="${movieKey}">${movieKey}</option>`; });
             
             toggleNewMovieInput(select);
             document.getElementById('publishModal').classList.add('active');
         }
 
+        function openReplaceWorkflow(movieKey, videoId) {
+            const database = JSON.parse(localStorage.getItem('storytv_movies_db_v2')) || {};
+            const item = database[movieKey].find(v => v.id === videoId);
+            if(!item) return;
+
+            document.getElementById('modalWorkflowTitle').innerText = "Replace Asset Metadata";
+            document.getElementById('submitWorkflowBtn').innerText = "Update Content";
+            document.getElementById('editVideoTargetId').value = JSON.stringify({ movieKey, videoId });
+            document.getElementById('pubCaptionText').value = item.description;
+            
+            document.getElementById('pubVideoAsset').required = false;
+            document.getElementById('pubThumbAsset').required = false;
+            document.getElementById('folderGroupField').style.display = "none";
+            document.getElementById('publishModal').classList.add('active');
+        }
+
         function toggleNewMovieInput(selectElement) {
             const inputField = document.getElementById('newMovieTitleField');
-            if(selectElement.value === "") {
-                inputField.style.display = "block";
-                inputField.required = true;
-            } else {
-                inputField.style.display = "none";
-                inputField.required = false;
-            }
+            inputField.style.display = (selectElement.value === "") ? "block" : "none";
+            inputField.required = (selectElement.value === "");
         }
 
         function handleItemPublish(e) {
             e.preventDefault();
-            const select = document.getElementById('videoMovieSelection').value;
-            const newMovieTitle = document.getElementById('newMovieTitleField').value.trim();
-            const movieKey = select || newMovieTitle;
-
+            const editMeta = document.getElementById('editVideoTargetId').value;
+            const database = JSON.parse(localStorage.getItem('storytv_movies_db_v2')) || {};
+            
             const videoFile = document.getElementById('pubVideoAsset').files[0];
             const thumbFile = document.getElementById('pubThumbAsset').files[0];
             const caption = document.getElementById('pubCaptionText').value;
 
-            const videoObjectURL = URL.createObjectURL(videoFile);
-            const reader = new FileReader();
+            // Media Processing Engine converting files securely to persistent instances
+            const processFiles = (cb) => {
+                let res = { videoUrl: null, thumbUrl: null };
+                const readThumb = () => {
+                    if(thumbFile) {
+                        const r = new FileReader();
+                        r.onloadend = () => { res.thumbUrl = r.result; cb(res); };
+                        r.readAsDataURL(thumbFile);
+                    } else { cb(res); }
+                };
+                if(videoFile) {
+                    const r = new FileReader();
+                    r.onloadend = () => { res.videoUrl = r.result; readThumb(); };
+                    r.readAsDataURL(videoFile);
+                } else { readThumb(); }
+            };
 
-            reader.onloadend = function() {
-                const database = JSON.parse(localStorage.getItem('storytv_movies_db')) || {};
-                if(!database[movieKey]) database[movieKey] = [];
+            processFiles((media) => {
+                if(editMeta) {
+                    const { movieKey, videoId } = JSON.parse(editMeta);
+                    let target = database[movieKey].find(v => v.id === videoId);
+                    if(target) {
+                        target.description = caption;
+                        if(media.videoUrl) target.videoSrc = media.videoUrl;
+                        if(media.thumbUrl) target.coverImg = media.thumbUrl;
+                    }
+                } else {
+                    const select = document.getElementById('videoMovieSelection').value;
+                    const movieKey = select || document.getElementById('newMovieTitleField').value.trim();
+                    if(!database[movieKey]) database[movieKey] = [];
 
-                database[movieKey].unshift({
-                    id: 'video_' + Date.now(),
-                    videoSrc: videoObjectURL,
-                    username: currentProfileConfig.name,
-                    avatarSrc: currentProfileConfig.avatar,
-                    description: caption,
-                    likesCount: 0,
-                    coverImg: reader.result
-                });
+                    database[movieKey].unshift({
+                        id: 'vid_' + Date.now(),
+                        videoSrc: media.videoUrl || '',
+                        username: currentProfileConfig.name,
+                        avatarSrc: currentProfileConfig.avatar,
+                        description: caption,
+                        coverImg: media.thumbUrl || ''
+                    });
+                }
 
-                localStorage.setItem('storytv_movies_db', JSON.stringify(database));
+                localStorage.setItem('storytv_movies_db_v2', JSON.stringify(database));
                 localStorage.setItem('db_generation_signature', Date.now());
-
                 closeModal('publishModal');
                 document.getElementById('publishModal').querySelector('form').reset();
                 renderDashboardStructure();
-                triggerBlinkEffect(); // Fire structural screen blink response
-            };
-
-            if(thumbFile) reader.readAsDataURL(thumbFile);
+                triggerBlinkEffect();
+            });
         }
 
         function deleteVideoAsset(movieKey, videoId) {
             if(!confirm("Delete this video permanently?")) return;
-            const database = JSON.parse(localStorage.getItem('storytv_movies_db')) || {};
-            
+            const database = JSON.parse(localStorage.getItem('storytv_movies_db_v2')) || {};
             if(database[movieKey]) {
                 database[movieKey] = database[movieKey].filter(video => video.id !== videoId);
                 if(database[movieKey].length === 0) delete database[movieKey];
-                
-                localStorage.setItem('storytv_movies_db', JSON.stringify(database));
+                localStorage.setItem('storytv_movies_db_v2', JSON.stringify(database));
                 localStorage.setItem('db_generation_signature', Date.now());
                 renderDashboardStructure();
                 triggerBlinkEffect();
@@ -433,13 +386,13 @@
 
         function readImgHint(input, elemId) {
             if(input.files && input.files[0]) {
-                document.getElementById(elemId).innerText = `✓ ${input.files[0].name.substring(0, 15)}...`;
+                document.getElementById(elemId).innerText = `✓ Loaded: ${input.files[0].name.substring(0, 12)}`;
                 document.getElementById(elemId).style.color = "var(--neon-cyan)";
             }
         }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         function closeSheetOnOuter(e, id) { if(e.target.classList.contains('modal-overlay')) closeModal(id); }
-        function triggerAuth() { alert("Account Sign-in / Registration terminal is ready."); }
+        function triggerAuth() { alert("Identity Authentication Node Online."); }
     </script>
 </body>
 </html>
